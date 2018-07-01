@@ -1,0 +1,2 @@
+- src: https://github.com/it-kombinat/ansible-splunk-base
+  scm: git
