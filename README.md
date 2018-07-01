@@ -1,4 +1,6 @@
-# ansible-ec2
+# ansible-splunk-basic
+
+DEMO - Starting EC2 instance and installing Splunk
 
 # How to use
 
@@ -13,5 +15,5 @@ export AWS_SECRET_ACCESS_KEY="LSDJKFODSJF9SDJF8UH3U3HFKW"
 ```
 ## Playbook run
 ```
-ansible-playbook ec2-basic.yml
+ansible-playbook ec2-splunk-basic.yml
 ```
