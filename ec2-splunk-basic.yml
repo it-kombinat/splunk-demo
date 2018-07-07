@@ -28,7 +28,7 @@
     splunk_host_domain:
     splunk_license_master:
     company: it-kombinat
-    splunk_admin_passwd: demo123
+    splunk_admin_passwd: demo0815  # Password must contain at least 8 total printable ASCII character(s)
   roles:
     - ansible-splunk-base
 
