@@ -15,7 +15,7 @@ This playbook deploys configuration changes to setup a Splunk Server.
 
 ## Expectations
 
-This ansible package expectes your servers to be EL base OS (RHEL7/CENTOS7). The splunk binaries currently set are *Splunk 7.1* located under `playbooks/splunk_binaries`
+This ansible package expectes your servers to be EL base OS (RHEL7/CENTOS7). The splunk binaries currently set are *Splunk 7.1*
 
 ## Uploading Splunk RPM to S3 Bucket
 ```
@@ -43,6 +43,8 @@ ansible-playbook ec2-splunk-basic.yml
 ```
 
 ## Splunk Account Information
+```
 **username:** admin
 **password:** admin123 [default] - see Ansbile Role [ansible-splunk-basic]
 **user:** https://[public-ip-of-the-ec2-instance]:8000
+```
