@@ -1,2 +1,6 @@
 - src: https://github.com/it-kombinat/ansible-splunk-base
   scm: git
+- src: https://github.com/it-kombinat/ansible-role-rsyslog
+  scm: git
+- src: https://github.com/it-kombinat/ansible-ec2-instance
+  scm: git

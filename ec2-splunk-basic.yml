@@ -1,12 +1,12 @@
 ---
-- name: Provision an EC2 Instance 
+- name: Provision an EC2 Instance
   hosts: localhost
   connection: local
   gather_facts: False
   tags: provisioning
   vars:
     instance_type: t2.micro
-    security_group: ansible-splunk 
+    security_group: ansible-splunk
     image: ami-82be18ed
     keypair: id_rsa
     region: eu-central-1
