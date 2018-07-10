@@ -17,7 +17,7 @@ This playbook deploys configuration changes to setup a Splunk Server.
 
 This ansible package expectes your servers to be EL base OS (RHEL7/CENTOS7). The splunk binaries currently set are *Splunk 7.1*
 
-## Uploading Splunk RPM to S3 Bucket
+###Uploading Splunk RPM to S3 Bucket
 ```
 s3cmd put Downloads/splunk/splunk-7.1.1-8f0ead9ec3db-linux-2.6-x86_64.rpm  s3://<yourbucket>
 ```
@@ -35,8 +35,6 @@ All necessary roles has to be downloaded with the galaxy command or `git clone`
 ```
 ansible-galaxy install -r roles.yml --force
 ```
-## Variables
-
 ## Playbook run
 ```
 ansible-playbook ec2-splunk-basic.yml
@@ -48,3 +46,13 @@ ansible-playbook ec2-splunk-basic.yml
 **password:** admin123 [default] - see Ansbile Role [ansible-splunk-basic]
 **user:** https://[public-ip-of-the-ec2-instance]:8000
 ```
+
+##Future
+
+There's a few things I'm looking to do to make this play more re-usable, namely:
+
+   * Increase the idempotency
+   * Using docker container to run a All-In-One-Solution
+   * more secure - Ansible vault for the variable -  `splunk_admin_passwd`
+   * number of other minor modifications
+
