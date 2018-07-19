@@ -4,3 +4,5 @@
   scm: git
 - src: https://github.com/it-kombinat/ansible-ec2-instance
   scm: git
+- src: https://github.com/it-kombinat/ansible-docker-base
+  scm: git
