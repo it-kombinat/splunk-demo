@@ -1,0 +1,53 @@
+---
+- name: Provision an EC2 Instance
+  hosts: localhost
+  connection: local
+  gather_facts: False
+  tags: ec2
+  vars:
+    instance_type: t2.micro
+    security_group: ansible-splunk
+    image: ami-7c4f7097 # ami-432e2fa8 CIS Amazon Linux Benchmark v2.0.0 - Level 1
+    keypair: id_rsa
+    region: eu-central-1
+    count: 1
+    ec2tag: splunk-docker
+    inventory_group: splunk
+  roles:
+    - ansible-ec2-instance
+
+- name: Installing and configuration of the Splunk Service
+  hosts: splunk
+  become: true
+  remote_user: ec2-user
+  tags: docker
+  vars:
+    container_name: splunk-demo
+    docker_image: stackware/spl:1.4
+  roles:
+    - ansible-docker-base
+
+- name: Provision an EC2 Instance for RSYSLOG Client
+  hosts: localhost
+  connection: local
+  gather_facts: False
+  vars:
+    instance_type: t2.micro
+    security_group: splunk-client
+    image: ami-7c4f7097
+    keypair: id_rsa
+    region: eu-central-1
+    count: 3
+    ec2tag: rsyslog-client-d
+    inventory_group: rsyslog-clients
+  roles:
+    - ansible-ec2-instance
+
+- name: Configuration of RSYSLOG - Client
+  hosts: rsyslog-clients
+  become: true
+  remote_user: ec2-user
+  vars:
+    rsyslog_remote: "{{ groups['splunk'] }}"
+  roles:
+    - ansible-role-rsyslog
