@@ -16,38 +16,20 @@
   roles:
     - ansible-ec2-instance
 
-- name: Installing and configuration of the Splunk Service
+- name: Installing and configuration of the Splunk Service and Configure Rsyslog - Client --- ALL-IN-ONE --
   hosts: splunk
   become: true
   remote_user: ec2-user
   tags: docker
   vars:
     container_name: splunk-demo
-    docker_image: stackware/spl:1.4
-  roles:
-    - ansible-docker-base
-
-- name: Provision an EC2 Instance for RSYSLOG Client
-  hosts: localhost
-  connection: local
-  gather_facts: False
-  vars:
-    instance_type: t2.micro
-    security_group: splunk-client
-    image: ami-7c4f7097
-    keypair: id_rsa
-    region: eu-central-1
-    count: 3
-    ec2tag: rsyslog-client-d
-    inventory_group: rsyslog-clients
-  roles:
-    - ansible-ec2-instance
-
-- name: Configuration of RSYSLOG - Client
-  hosts: rsyslog-clients
-  become: true
-  remote_user: ec2-user
-  vars:
+    docker_image: stackware/spl:1.8
+    hec_token: token=dfsfsd-dsfds-sdfsf-43243
+    collector_container_name: collectorfordocker
+    collector_image: outcoldsolutions/collectorfordocker:3.0.93.180531
+    SPLURL: "{{ groups['splunk'] }}"
     rsyslog_remote: "{{ groups['splunk'] }}"
   roles:
-    - ansible-role-rsyslog
+    - ansible-docker-spl
+    - docker-collector
+   # - ansible-role-rsyslog

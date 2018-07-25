@@ -13,6 +13,13 @@ This playbook deploys configuration changes to setup a Splunk Server.
 * Starting RSYSLOG-Generator to provide logdata
 
 
+## Testing
+
+curl -k  http://<IPAddress>:8088/services/collector/event -H "Authorization: Splunk <token>" -d '{"event": "hello World"}'
+
+docker run -it --entrypoint=/bin/bash --log-driver=splunk --log-opt splunk-token=f23b1ad6-5965-4537-bf69-b1aa54B1aa88 --log-opt splunk-url=http://54.93.226.176:8088 stackware/sysgen:1.1
+
+
 ## Expectations
 
 This ansible package expectes your servers to be EL base OS (RHEL7/CENTOS7). The splunk binaries currently set are *Splunk 7.1*
@@ -55,4 +62,3 @@ There's a few things I'm looking to do to make this play more re-usable, namely:
    * Using docker container to run a All-In-One-Solution
    * more secure - Ansible vault for the variable -  `splunk_admin_passwd`
    * number of other minor modifications
-
