@@ -31,10 +31,44 @@
     syslog_gen_hec: syslog-gen-hec
     syslog_gen_image: stackware/sysgen:1.6
     syslog_gen_syslog: true
-    SPLURL: "{{ groups['splunk'] }}"
     rsyslog_remote: "{{ groups['splunk'] }}"
+  tasks:
+    - name: Make vars persistant
+      set_fact:
+        hec_token: "{{hec_token}}"
+        rsyslog_remote: "{{rsyslog_remote}}"
   roles:
     - ansible-docker-spl
     - docker-collector
     - syslog-gen-docker
    # - ansible-role-rsyslog
+
+- name: Configure Callback-Plugin
+  hosts: localhost
+  tags: plugin
+  tasks:
+    - name: Enabling Callback-Plugin
+      ini_file:
+        path: ~/ansible/splunk-demo/ansible.cfg
+        section: default
+        option: callback_whitelist
+        value: splunk
+        backup: yes
+
+    - name: Configure RSYSLOG for Callback Plugin
+      ini_file:
+        path: ~/ansible/splunk-demo/ansible.cfg
+        section: callback_splunk
+        option: "{{ item.option }}"
+        value: "{{ item.value }}"
+      loop:
+        - { option: 'url', value: "{{ rsyslog_remote }}" }
+        - { option: 'authtoken', value: "{{ hec_token }}" }
+
+- name: Rollout Badguy
+  hosts: splunk
+  become: true
+  remote_user: ec2-user
+  tags: badguy
+  roles:
+    - badguy
