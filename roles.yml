@@ -6,3 +6,11 @@
   scm: git
 - src: https://github.com/it-kombinat/ansible-docker-base
   scm: git
+- src: https://github.com/it-kombinat/ansible-badguy
+  scm: git
+- src: https://github.com/it-kombinat/ansible-docker-spl
+  scm: git
+- src: https://github.com/it-kombinat/docker-collector
+  scm: git
+- src: https://github.com/it-kombinat/syslog-gen-docker
+  scm: git
