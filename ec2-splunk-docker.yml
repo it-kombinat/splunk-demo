@@ -1,0 +1,125 @@
+---
+- name: Provision an EC2 Instance
+  hosts: localhost
+  connection: local
+  gather_facts: False
+  tags: ec2
+  vars:
+    instance_type: t2.micro
+    security_group: ansible-splunk
+    image: ami-7c4f7097 # ami-432e2fa8 CIS Amazon Linux Benchmark v2.0.0 - Level 1
+    keypair: id_rsa
+    region: eu-central-1
+    count: 1
+    ec2tag: splunk-docker
+    inventory_group: splunk
+  roles:
+    - ansible-ec2-instance
+
+- name: Installing and configuration of the Splunk Service and Configure Rsyslog - Client --- ALL-IN-ONE --
+  hosts: splunk
+  become: true
+  remote_user: ec2-user
+  tags: docker
+  vars:
+    spl_container_name: splunk-demo
+    spl_docker_image: stackware/spl:1.9
+    hec_token: dfsfsd-dsfds-sdfsf-43243
+    collector_container_name: collectorfordocker
+    collector_image: outcoldsolutions/collectorfordocker:3.0.93.180531
+    syslog_gen_syslog: syslog-gen-rsyslog  
+    syslog_gen_hec: syslog-gen-hec
+    syslog_gen_image: stackware/sysgen:1.6
+    syslog_gen_syslog: true
+    rsyslog_remote: "{{ groups['splunk'] }}"
+    ssh_server_password_login: true
+  pre_tasks:
+    - name: Configure password Authentication
+      lineinfile:
+        dest: /etc/ssh/sshd_config
+        regexp: '^PasswordAuthentication'
+        line: 'PasswordAuthentication yes'
+      register: configsshd
+
+    - name: restart SSHD Service
+      service:
+        name: sshd
+        state: restarted
+      when: configsshd.changed
+  roles:
+    - ansible-docker-spl
+    - docker-collector
+    - syslog-gen-docker
+    - ansible-role-rsyslog
+
+- name: Configure Callback-Plugin
+  hosts: localhost
+  tags: plugin
+  vars:
+    hec_token: dfsfsd-dsfds-sdfsf-43243
+    rsyslog_remote: http://{{ groups['splunk'][0] }}:8088/services/collector/event"
+  tasks:
+    - name: Enabling Callback-Plugin
+      ini_file:
+        path: ~/ansible/splunk-demo/ansible.cfg
+        section: default
+        option: callback_whitelist
+        value: splunk
+        backup: yes
+
+    - name: Configure RSYSLOG for Callback Plugin
+      ini_file:
+        path: ~/ansible/splunk-demo/ansible.cfg
+        section: callback_splunk
+        option: "{{ item.option }}"
+        value: "{{ item.value }}"
+      loop:
+        - { option: 'url', value: "{{ rsyslog_remote }}" }
+        - { option: 'authtoken', value: "{{ hec_token }}" }
+
+- name: Provision an EC2 Instance for Badguy
+  hosts: localhost
+  connection: local
+  gather_facts: False
+  tags: ec2
+  vars:
+    instance_type: t2.micro
+    security_group: ansible-splunk
+    image: ami-7c4f7097 # ami-432e2fa8 CIS Amazon Linux Benchmark v2.0.0 - Level 1
+    keypair: id_rsa
+    region: eu-central-1
+    count: 2
+    ec2tag: badguy
+    inventory_group: badguy
+  roles:
+    - ansible-ec2-instance
+
+- name: Rollout Badguy
+  hosts: badguy
+  become: true
+  remote_user: ec2-user
+  tags: badguy
+  vars:
+    rsyslog_remote: "{{ groups['splunk'] }}"
+    #badguytgt: "{{ groups['badguy'] }}"
+    badguytgt: "{{ groups['splunk'] }}"
+    hec_token: dfsfsd-dsfds-sdfsf-43243
+    collector_container_name: collectorfordocker
+    collector_image: outcoldsolutions/collectorfordocker:3.0.93.180531
+  pre_tasks:
+    - name: Configure password Authentication
+      lineinfile:
+          dest: /etc/ssh/sshd_config
+          regexp: '^PasswordAuthentication'
+          line: 'PasswordAuthentication yes'
+      register: configsshd
+
+    - name: restart SSHD Service
+      service:
+        name: sshd
+        state: restarted
+      when: configsshd.changed
+  roles:
+    - ansible-role-rsyslog
+    - ansible-badguy
+    - docker-collector
