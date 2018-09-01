@@ -7,7 +7,7 @@
   vars:
     instance_type: t2.micro
     security_group: ansible-splunk
-    image: ami-7c4f7097 # ami-432e2fa8 CIS Amazon Linux Benchmark v2.0.0 - Level 1
+    image: ami-7c4f7097 # ami-432e2fa8 CIS Amazon Linux Benchmark v2.0.0 - Level 1 - for further testing
     keypair: id_rsa
     region: eu-central-1
     count: 1
@@ -16,13 +16,14 @@
   roles:
     - ansible-ec2-instance
 
-- name: Installing and configuration of the Splunk Service and Configure Rsyslog - Client --- ALL-IN-ONE --
+- name: Installing Splunk Service as Container - Onboarding rsyslog and hec clients
   hosts: splunk
   become: true
   remote_user: ec2-user
   tags: docker
   vars:
     spl_container_name: splunk-demo
+    syslog_gen_service: false
     spl_docker_image: stackware/spl:1.9
     hec_token: dfsfsd-dsfds-sdfsf-43243
     collector_container_name: collectorfordocker
@@ -32,7 +33,7 @@
     syslog_gen_image: stackware/sysgen:1.6
     syslog_gen_syslog: true
     rsyslog_remote: "{{ groups['splunk'] }}"
-    ssh_server_password_login: true
+    syslog_gen_syslog: false
   pre_tasks:
     - name: Configure password Authentication
       lineinfile:
@@ -85,7 +86,7 @@
   vars:
     instance_type: t2.micro
     security_group: ansible-splunk
-    image: ami-7c4f7097 # ami-432e2fa8 CIS Amazon Linux Benchmark v2.0.0 - Level 1
+    image: ami-7c4f7097 # ami-432e2fa8 CIS Amazon Linux Benchmark v2.0.0 - Level 1 - for further testing
     keypair: id_rsa
     region: eu-central-1
     count: 2
@@ -101,6 +102,7 @@
   tags: badguy
   vars:
     rsyslog_remote: "{{ groups['splunk'] }}"
+    syslog_gen_service: false
     #badguytgt: "{{ groups['badguy'] }}"
     badguytgt: "{{ groups['splunk'] }}"
     hec_token: dfsfsd-dsfds-sdfsf-43243
