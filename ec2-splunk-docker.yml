@@ -48,10 +48,10 @@
         state: restarted
       when: configsshd.changed
   roles:
+    - ansible-role-rsyslog
     - ansible-docker-spl
     - docker-collector
     - syslog-gen-docker
-    - ansible-role-rsyslog
 
 - name: Configure Callback-Plugin
   hosts: localhost
@@ -122,6 +122,5 @@
         state: restarted
       when: configsshd.changed
   roles:
-    - ansible-role-rsyslog
     - ansible-badguy
     - docker-collector
