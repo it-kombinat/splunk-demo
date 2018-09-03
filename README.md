@@ -1,7 +1,7 @@
 # ansible-splunk-demo
 
 So far I've only used and tested this playbook on AWS instances.
-Presentation about this Demo can find here: https://it-kombinat.github.io/slides-splunk-demo/
+Presentation about this Demo can find [here](https://it-kombinat.github.io/slides-splunk-demo/).
 
 # Content of this Repository
 This Repo contains two Ansible plays
@@ -35,7 +35,7 @@ This playbook will do the following
 
 This ansible package expectes your servers to be EL base OS (RHEL7/CENTOS7). The splunk binaries currently set are *Splunk 7.1*
 
-##Uploading Splunk RPM to S3 Bucket
+## Uploading Splunk RPM to S3 Bucket
 For the basic play, the rpm file is needed. e.g. in an S3 Bucket - See [Ansible Role](https://github.com/it-kombinat/ansible-splunk-base)
 ```
 s3cmd put Downloads/splunk/splunk-7.1.1-8f0ead9ec3db-linux-2.6-x86_64.rpm  s3://<yourbucket>
@@ -55,12 +55,12 @@ ansible-galaxy install -r roles.yml --force
 ```
 ## Playbook run
 
-basic play
+Basic play
 ```
 ansible-playbook ec2-splunk-basic.yml
 ```
 
-docker play
+Docker play
 ```
 ansible-playbook ec2-splunk-docker.yml
 ```
@@ -72,7 +72,7 @@ ansible-playbook ec2-splunk-docker.yml
 **user:** https://[public-ip-of-the-ec2-instance]:8000
 ```
 
-##Future
+## Future
 
 There's a few things I'm looking to do to make this play more re-usable, namely:
 
