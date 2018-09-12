@@ -4,10 +4,12 @@ So far I've only used and tested this playbook on AWS instances.
 Presentation about this Demo can find [here](https://it-kombinat.github.io/slides-splunk-demo/).
 
 # Content of this Repository
-This Repo contains two Ansible plays
+This Repo contains two Ansible plays, Ansible-Roles for these plays and an Ansible configuration file.
 
 - `ec2-splunk-basic.yml`
 - `ec2-splunk-docker.yml`
+- `roles.yml`
+- `ansible.cfg`
 
 # Splunk playbook and role Objectives
 
@@ -78,4 +80,5 @@ There's a few things I'm looking to do to make this play more re-usable, namely:
 
    * Increase the idempotency
    * more secure - Ansible vault for the variable -  `splunk_admin_passwd`
+   * persist variables between plays
    * number of other minor modifications
