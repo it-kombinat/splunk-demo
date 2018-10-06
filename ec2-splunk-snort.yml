@@ -1,0 +1,25 @@
+---
+- name: Provision an EC2 Instance
+  hosts: localhost
+  connection: local
+  gather_facts: False
+  tags: ec2
+  vars:
+    instance_type: t2.micro
+    security_group: ansible-splunk
+    image: ami-7c4f7097 # ami-432e2fa8 CIS Amazon Linux Benchmark v2.0.0 - Level 1 - for further testing
+    keypair: id_rsa
+    region: eu-central-1
+    count: 1
+    ec2tag: snort-ids
+    inventory_group: snort
+  roles:
+    - ansible-ec2-instance
+
+- name: Installing Splunk Service as Container - Onboarding rsyslog and hec clients
+  hosts: snort
+  become: true
+  remote_user: ec2-user
+  tags: snort
+  roles:
+    - ansible-snort
