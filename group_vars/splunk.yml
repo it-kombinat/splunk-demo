@@ -1,0 +1,13 @@
+# Variables for Splunk
+spl_container_name: splunk-demo
+syslog_gen_service: false
+spl_docker_image: stackware/spl:2.6
+#hec_token: dfsfsd-dsfds-sdfsf-43243
+collector_container_name: collectorfordocker
+collector_image: outcoldsolutions/collectorfordocker:3.0.93.180531
+syslog_gen_syslog: syslog-gen-rsyslog
+syslog_gen_hec: syslog-gen-hec
+syslog_gen_image: stackware/sysgen:1.6
+rsyslog_remote: "{{ groups['splunk'] }}"
+cowrie_remote: "{{ groups['splunk'] }}" 
+syslog_gen_syslog: false
