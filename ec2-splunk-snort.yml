@@ -7,6 +7,35 @@
   vars:
     instance_type: t2.micro
     security_group: ansible-splunk
+    sec_grp_in:
+      - proto: tcp
+        from_port: 22
+        to_port: 22
+        cidr_ip: 0.0.0.0/0
+      - proto: tcp
+        from_port: 8000
+        to_port: 8000
+        cidr_ip: 0.0.0.0/0
+      - proto: tcp
+        from_port: 8088
+        to_port: 8088
+        cidr_ip: 0.0.0.0/0
+      - proto: tcp
+        from_port: 443
+        to_port: 443
+        cidr_ip: 0.0.0.0/0
+      - proto: tcp
+        from_port: 514
+        to_port: 514
+        cidr_ip: 0.0.0.0/0
+      - proto: tcp
+        from_port: 1514
+        to_port: 1514
+        cidr_ip: 0.0.0.0/0
+      - proto: tcp
+        from_port: 2514
+        to_port: 2514
+        cidr_ip: 0.0.0.0/0
     image: ami-7c4f7097 # ami-432e2fa8 CIS Amazon Linux Benchmark v2.0.0 - Level 1 - for further testing
     keypair: id_rsa
     region: eu-central-1
@@ -21,19 +50,7 @@
   become: true
   remote_user: ec2-user
   tags: splunk-vm,splunk
-#  vars:
-#    spl_container_name: splunk-demo
-#    syslog_gen_service: false
-#    spl_docker_image: stackware/spl:2.5
-#    hec_token: dfsfsd-dsfds-sdfsf-43243
-#    collector_container_name: collectorfordocker
-#    collector_image: outcoldsolutions/collectorfordocker:3.0.93.180531
-#    syslog_gen_syslog: syslog-gen-rsyslog  
-#    syslog_gen_hec: syslog-gen-hec
-#    syslog_gen_image: stackware/sysgen:1.6
-#    syslog_gen_syslog: true
 #    rsyslog_remote: "{{ groups['splunk'] }}"
-#    syslog_gen_syslog: false
   pre_tasks:
     - name: Configure password Authentication
       lineinfile:
@@ -50,8 +67,8 @@
   roles:
    # - ansible-role-rsyslog
     - ansible-docker-spl
-    - docker-collector
-    - syslog-gen-docker
+   # - docker-collector
+   # - syslog-gen-docker
 
 - name: Configure Callback-Plugin
   hosts: localhost
@@ -78,14 +95,23 @@
         - { option: 'url', value: "{{ rsyslog_remote }}" }
         - { option: 'authtoken', value: "{{ hec_token }}" }
 
-- name: Provision an EC2 Instance for SNORT
+- name: Provision an EC2 Instance for SNORT and Cowrie
   hosts: localhost
   connection: local
   gather_facts: False
-  tags: ec2-snort
+  tags: ec2-snort, snort
   vars:
     instance_type: t2.micro
-    security_group: ansible-splunk
+    security_group: snort-cowrie
+    sec_grp_in:
+      - proto: tcp
+        from_port: 22
+        to_port: 22
+        cidr_ip: 0.0.0.0/0
+      - proto: tcp
+        from_port: 2222
+        to_port: 2222
+        cidr_ip: 0.0.0.0/0
     image: ami-7c4f7097 # ami-432e2fa8 CIS Amazon Linux Benchmark v2.0.0 - Level 1 - for further testing
     keypair: id_rsa
     region: eu-central-1
@@ -95,7 +121,7 @@
   roles:
     - ansible-ec2-instance
 
-- name: Installing Snort and Docker Collector
+- name: Installing Snort and Cowrie
   hosts: snort
   become: true
   remote_user: ec2-user
@@ -103,7 +129,15 @@
   vars:
     rsyslog_remote: "{{ groups['splunk'] }}"
     snort_forwarder: "{{ groups['splunk'] }}"
-    hec_token: dfsfsd-dsfds-sdfsf-43243
+    cowrie_remote: "{{ groups['splunk'] }}"
+    # Output-Plugins
+    cowrie_settings:
+      output_splunk:
+        enabled: true
+        url:  http://{{ cowrie_remote | join(" ") }}:8088/services/collector/event
+        token: "{{ hec_token }}"
+        source: cowrie
+        sourcetype: cowrie
   pre_tasks:
     - name: Configure password Authentication
       lineinfile:
@@ -119,7 +153,7 @@
       when: configsshd.changed
   roles:
     - ansible-snort
-#    - ansible-httpd-demo
+    - ansible-cowried
 
 - name: Provision an EC2 Instance for Badguy
   hosts: localhost
@@ -128,11 +162,11 @@
   tags: ec2
   vars:
     instance_type: t2.micro
-    security_group: ansible-splunk
+    security_group: badguy
     image: ami-7c4f7097 # ami-432e2fa8 CIS Amazon Linux Benchmark v2.0.0 - Level 1 - for further testing
     keypair: id_rsa
     region: eu-central-1
-    count: 1
+    count: 3
     ec2tag: badguy
     inventory_group: badguy
   roles:
@@ -147,22 +181,9 @@
     rsyslog_remote: "{{ groups['splunk'] }}"
     syslog_gen_service: false
     badguytgt: "{{ groups['snort'] }}"
-    hec_token: dfsfsd-dsfds-sdfsf-43243
+    badguytgt_port: 2222
     collector_container_name: collectorfordocker
     collector_image: outcoldsolutions/collectorfordocker:3.0.93.180531
-#  pre_tasks:
-#    - name: Configure password Authentication
-#      lineinfile:
-#          dest: /etc/ssh/sshd_config
-#          regexp: '^PasswordAuthentication'
-#          line: 'PasswordAuthentication yes'
-#      register: configsshd
-
-#   - name: restart SSHD Service
-#      service:
-#        name: sshd
-#        state: restarted
-#      when: configsshd.changed
   roles:
     - ansible-badguy
     - docker-collector

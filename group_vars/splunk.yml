@@ -1,4 +1,6 @@
 # Variables for Splunk
+# ec2_instance
+security_group: ansible-splunk
 spl_container_name: splunk-demo
 syslog_gen_service: false
 spl_docker_image: stackware/spl:2.6
