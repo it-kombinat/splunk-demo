@@ -80,5 +80,4 @@ There's a few things I'm looking to do to make this play more re-usable, namely:
 
    * Increase the idempotency
    * more secure - Ansible vault for the variable -  `splunk_admin_passwd`
-   * persist variables between plays
    * number of other minor modifications
