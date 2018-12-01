@@ -140,7 +140,7 @@
     image: ami-7c4f7097 # ami-432e2fa8 CIS Amazon Linux Benchmark v2.0.0 - Level 1 - for further testing
     keypair: id_rsa
     region: eu-central-1
-    count: 3
+    count: 1
     ec2tag: badguy
     inventory_group: badguy
   roles:
