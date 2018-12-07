@@ -8,6 +8,7 @@ This Repo contains two Ansible plays, Ansible-Roles for these plays and an Ansib
 
 - `ec2-splunk-basic.yml`
 - `ec2-splunk-docker.yml`
+- `ec2-splunk-snort.yml`
 - `roles.yml`
 - `ansible.cfg`
 
@@ -73,6 +74,11 @@ ansible-playbook ec2-splunk-basic.yml
 Docker play
 ```
 ansible-playbook ec2-splunk-docker.yml
+```
+
+Snort play
+```
+ansible-playbook ec2-splunk-snort.yml
 ```
 
 ## Splunk Account Information
