@@ -14,3 +14,7 @@
   scm: git
 - src: https://github.com/it-kombinat/syslog-gen-docker
   scm: git
+- src: https://github.com/it-kombinat/ansible-snort
+  scm: git
+- src: https://github.com/it-kombinat/ansible-cowried
+  scm: git
