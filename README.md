@@ -1,7 +1,7 @@
 # ansible-splunk-demo
 
 So far I've only used and tested this playbook on AWS instances.
-Presentation about this Demo can find [here](https://it-kombinat.github.io/slides-splunk-demo/).
+Presentation about this Demo can find [here](https://it-kombinat.org)
 
 # Content of this Repository
 This Repo contains two Ansible plays, Ansible-Roles for these plays and an Ansible configuration file.
@@ -32,6 +32,14 @@ This playbook will do the following
 * Configure Callback-Plugin on Ansible - Forwarding Logs to [Splunk-Plugin](https://splunkbase.splunk.com/app/4023/)
 * Starting additional EC2 instance for Badguy
 * Deploy [Badguy as Container](https://github.com/it-kombinat/badguy) - this image contains an login cracker to simulate an attack [THC-Hydra](https://tools.kali.org/password-attacks/hydra)
+
+## `ec-splunk-snort.yml`
+Splunk as a Service with on-boarding of the following services
+* Docker-Collector
+* SNORT
+* Docker-Collector
+* Cowrie - Honeypot
+* Badguy
 
 # Expectations
 
@@ -80,5 +88,4 @@ There's a few things I'm looking to do to make this play more re-usable, namely:
 
    * Increase the idempotency
    * more secure - Ansible vault for the variable -  `splunk_admin_passwd`
-   * persist variables between plays
    * number of other minor modifications

@@ -50,7 +50,6 @@
   become: true
   remote_user: ec2-user
   tags: splunk-vm,splunk
-#    rsyslog_remote: "{{ groups['splunk'] }}"
   pre_tasks:
     - name: Configure password Authentication
       lineinfile:
@@ -69,31 +68,6 @@
     - ansible-docker-spl
    # - docker-collector
    # - syslog-gen-docker
-
-- name: Configure Callback-Plugin
-  hosts: localhost
-  tags: plugin
-  vars:
-    hec_token: dfsfsd-dsfds-sdfsf-43243
-    rsyslog_remote: http://{{ groups['splunk'][0] }}:8088/services/collector/event"
-  tasks:
-    - name: Enabling Callback-Plugin
-      ini_file:
-        path: ~/ansible/splunk-demo/ansible.cfg
-        section: default
-        option: callback_whitelist
-        value: splunk
-        backup: yes
-
-    - name: Configure RSYSLOG for Callback Plugin
-      ini_file:
-        path: ~/ansible/splunk-demo/ansible.cfg
-        section: callback_splunk
-        option: "{{ item.option }}"
-        value: "{{ item.value }}"
-      loop:
-        - { option: 'url', value: "{{ rsyslog_remote }}" }
-        - { option: 'authtoken', value: "{{ hec_token }}" }
 
 - name: Provision an EC2 Instance for SNORT and Cowrie
   hosts: localhost
@@ -166,7 +140,7 @@
     image: ami-7c4f7097 # ami-432e2fa8 CIS Amazon Linux Benchmark v2.0.0 - Level 1 - for further testing
     keypair: id_rsa
     region: eu-central-1
-    count: 3
+    count: 1
     ec2tag: badguy
     inventory_group: badguy
   roles:
