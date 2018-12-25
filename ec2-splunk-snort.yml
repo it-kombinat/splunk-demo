@@ -63,10 +63,7 @@
         state: restarted
       when: configsshd.changed
   roles:
-   # - ansible-role-rsyslog
     - ansible-docker-spl
-   # - docker-collector
-   # - syslog-gen-docker
 
 - name: Provision an EC2 Instance for SNORT and Cowrie
   hosts: localhost
