@@ -37,7 +37,6 @@
         to_port: 2514
         cidr_ip: 0.0.0.0/0
     image: ami-7c4f7097 # ami-432e2fa8 CIS Amazon Linux Benchmark v2.0.0 - Level 1 - for further testing
-    keypair: id_rsa
     region: eu-central-1
     count: 1
     ec2tag: splunk-docker
@@ -87,7 +86,6 @@
         to_port: 2222
         cidr_ip: 0.0.0.0/0
     image: ami-7c4f7097 # ami-432e2fa8 CIS Amazon Linux Benchmark v2.0.0 - Level 1 - for further testing
-    keypair: id_rsa
     region: eu-central-1
     count: 1
     ec2tag: snort-ids
@@ -138,7 +136,6 @@
     instance_type: t2.micro
     security_group: badguy
     image: ami-7c4f7097 # ami-432e2fa8 CIS Amazon Linux Benchmark v2.0.0 - Level 1 - for further testing
-    keypair: id_rsa
     region: eu-central-1
     count: 1
     ec2tag: badguy
