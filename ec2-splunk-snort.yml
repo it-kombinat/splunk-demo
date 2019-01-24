@@ -41,8 +41,19 @@
     count: 1
     ec2tag: splunk-docker
     inventory_group: splunk
+    dyn_zone: example.com
+    dyn_hostname: wwww.example.com
   roles:
     - ansible-ec2-instance
+  post_tasks:
+    - name: Add/Update DNS entry
+      route53:
+        command: create
+        zone: "{{ dyn_zone }}"
+        record: "{{ dyn_hostname }}"
+        type: A
+        ttl: 600
+        value: "{{ groups['splunk'] }}"
 
 - name: Installing Splunk Service as Container - Onboarding rsyslog and hec clients
   hosts: splunk
