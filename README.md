@@ -36,11 +36,10 @@ This playbook will do the following
 
 ## `ec-splunk-snort.yml`
 Splunk as a Service with on-boarding of the following services
-* Docker-Collector
-* SNORT
-* Docker-Collector
-* Cowrie - Honeypot
-* Badguy
+* [Docker-Collector](https://www.outcoldsolutions.com/docs/monitoring-docker/)
+* [SNORT](https://github.com/it-kombinat/ansible-snort)
+* [Cowrie - Honeypot](https://github.com/it-kombinat/ansible-cowried)
+* [Badguy](https://github.com/it-kombinat/badguy)
 
 # Expectations
 
@@ -60,8 +59,13 @@ export AWS_SECRET_ACCESS_KEY="LSDJKFODSJF9SDJF8UH3U3HFKW"
 ```
 
 ## Customizing Variables for your Environment
+Configure variables in [ec2-splunk-snort.yml](https://github.com/it-kombinat/splunk-demo/blob/master/ec2-splunk-snort.yml) and [group_vars/all](hittps://github.com/it-kombinat/splunk-demo/blob/master/group_vars/all.yml)
+
 ```
-keypair: <Name of your SSH-KEY>
+keypair: <Name of your SSH-KEY> # Name of your SSH-Key Name 
+dyn_dns: true|false # Enable or disable DNS management - Default is false
+dyn_zone: example.com # DNS Zonename of your route53 Zone
+dyn_hostname: spaas.example.com # # Hostname 
 ```
 
 ## Installing roles
