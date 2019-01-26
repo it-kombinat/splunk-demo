@@ -66,6 +66,7 @@ keypair: <Name of your SSH-KEY> # Name of your SSH-Key Name
 dyn_dns: true|false # Enable or disable DNS management - Default is false
 dyn_zone: example.com # DNS Zonename of your route53 Zone
 dyn_hostname: spaas.example.com # # Hostname 
+cowrie_password: admin # root password of the cowrie honeypot - Default is admin
 ```
 
 ## Installing roles
