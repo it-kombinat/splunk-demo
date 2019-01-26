@@ -59,7 +59,7 @@ export AWS_SECRET_ACCESS_KEY="LSDJKFODSJF9SDJF8UH3U3HFKW"
 ```
 
 ## Customizing Variables for your Environment
-Configure variables in [ec2-splunk-snort.yml](https://github.com/it-kombinat/splunk-demo/blob/master/ec2-splunk-snort.yml) and [group_vars/all](hittps://github.com/it-kombinat/splunk-demo/blob/master/group_vars/all.yml)
+Configure variables in [ec2-splunk-snort.yml](ec2-splunk-snort.yml) and [group_vars/all](group_vars/all.yml)
 
 ```
 keypair: <Name of your SSH-KEY> # Name of your SSH-Key Name 
